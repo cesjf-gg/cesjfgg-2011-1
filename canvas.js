@@ -21,56 +21,79 @@ var ctx = tela.getContext("2d");
 var x = 0;
 var y = 0;
 
-setInterval(passo, 1000/30);
+//setInterval(passo, 1000/30);
+
+//function passo(){
+
+//y = y - 180*1000/30/1000 ;
+
+const fps = 30;
+const segundo = 1000;
+var intervalo = segundo/fps;
+var vy = -200 ;
+var ay = 30;
+setInterval(passo,intervalo);
+
+function foguete(){
+
+   //Casco
+   ctx.beginPath();
+   ctx.rect(110+x,200+y, 40, 50);
+   ctx.closePath();   
+   ctx.fillStyle = "rgb(150, 150, 250)";
+   ctx.fill();
+   ctx.lineWidth = 2;
+   ctx.stroke();
+
+
+   ctx.beginPath();
+   ctx.moveTo(110+x,250+y);
+   ctx.lineTo(90+x,250+y);
+   ctx.lineTo(110+x,235+y);
+   ctx.closePath();
+   ctx.fillStyle = "rgb(250, 150, 150)";
+   ctx.fill();
+   ctx.stroke();
+
+
+   ctx.beginPath();
+   ctx.moveTo(150+x,250+y);
+   ctx.lineTo(170+x,250+y);
+   ctx.lineTo(150+x,235+y);
+   ctx.closePath();
+   ctx.fill();
+   ctx.stroke();
+
+
+   ctx.beginPath();
+   ctx.moveTo(110+x,200+y);
+   ctx.lineTo(130+x,180+y);
+   ctx.lineTo(150+x,200+y);
+   ctx.closePath();
+   ctx.fillStyle = "rgb(150, 250, 150)";
+   ctx.fill();
+   ctx.stroke();
+
+
+   ctx.beginPath();
+   ctx.arc(130+x,225+y, 10, 0, 2*Math.PI, false);
+   ctx.closePath();
+   ctx.fillStyle = "rgb(100, 100, 150)";
+   ctx.fill();
+   ctx.stroke();
+}
+
+//lipar a tela
+function limpar(){
+   ctx.fillStyle = "rgb(255, 255, 255)";
+   ctx.fillRect(0,0, 300, 400);
+}
 
 function passo(){
-
-y = y - 180*1000/30/1000 ;
-
-
-
-ctx.fillStyle = "rgb(255, 255, 255)";
-ctx.fillRect(0,0, 300, 400);
-
-ctx.rect(110+x,200+y, 40, 50);
-ctx.fillStyle = "rgb(150, 150, 250)";
-ctx.fill();
-ctx.lineWidth = 3;
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(110+x,250+y);
-ctx.lineTo(90+x,250+y);
-ctx.lineTo(110+x,235+y);
-ctx.closePath();
-ctx.fillStyle = "rgb(250, 150, 150)";
-ctx.fill();
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(150+x,250+y);
-ctx.lineTo(170+x,250+y);
-ctx.lineTo(150+x,235+y);
-ctx.closePath();
-ctx.fill();
-ctx.stroke();
-
-
-ctx.beginPath();
-ctx.moveTo(110+x,200+y);
-ctx.lineTo(130+x,180+y);
-ctx.lineTo(150+x,200+y);
-ctx.closePath();
-ctx.fillStyle = "rgb(150, 250, 150)";
-ctx.fill();
-ctx.stroke();
-
-
-ctx.beginPath();
-ctx.arc(130+x,225+y, 10, 0, 2*Math.PI, false);
-ctx.closePath();
-ctx.fillStyle = "rgb(100, 100, 150)";
-ctx.fill();
-ctx.stroke();
+   limpar();
+   vy+=ay*(intervalo/1000);
+   y+=vy*(intervalo/1000);   
+   foguete();
+   
 
 }
