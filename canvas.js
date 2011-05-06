@@ -20,17 +20,14 @@ var ctx = tela.getContext("2d");
 
 var x = 0;
 var y = 0;
-
-//setInterval(passo, 1000/30);
-
-//function passo(){
-
-//y = y - 180*1000/30/1000 ;
+var acelerando=false;
+document.addEventListener("keydown",botaoPressionado,false);
+document.addEventListener("keyup",botaoSolto,false);
 
 const fps = 30;
 const segundo = 1000;
 var intervalo = segundo/fps;
-var vy = -200 ;
+var vy = 0 ;
 var ay = 30;
 setInterval(passo,intervalo);
 
@@ -91,9 +88,33 @@ function limpar(){
 
 function passo(){
    limpar();
+   if(acelerando){
+    vy-=100*(intervalo/1000);  
+   }
    vy+=ay*(intervalo/1000);
-   y+=vy*(intervalo/1000);   
+   y+=vy*(intervalo/1000); 
+   if(y>150){
+      y=150;
+      vy=0;   
+   }
+   if (y<(0-180)){
+   y=-180;
+   vy=0;
+   }
    foguete();
    
+}
 
+function botaoPressionado(evento){
+   if(evento.keyCode==38){
+      console.log(evento.keyCode);
+      acelerando=true;     
+   }
+}
+
+function botaoSolto(evento){
+   if(evento.keyCode==38){
+      console.log(evento.keyCode);
+      acelerando=false;     
+   }
 }
