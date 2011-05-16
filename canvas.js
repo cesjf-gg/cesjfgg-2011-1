@@ -1,28 +1,14 @@
-/*
-This file are part of CESJFGG-2011-1.
-
-CESJFGG-2011-1 is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-CESJFGG-2011-1 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with CESJFGG-2011-1.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 var tela = document.getElementById("tela");
 var ctx = tela.getContext("2d");
 
 var x = 0;
 var y = 0;
+var ax = 0;
+var ay = 0;
 var acelerando=false;
 document.addEventListener("keydown",botaoPressionado,false);
 document.addEventListener("keyup",botaoSolto,false);
+var r = 0;
 
 const fps = 30;
 const segundo = 1000;
@@ -102,7 +88,14 @@ function passo(){
    vy=0;
    }
    foguete();
+   astronauta(10, 20, 0);  
+   astronauta(50, 120, 45);  
    
+   astronauta(ax++, 120, r++);  
+   if(ax>340){
+      ax= -40;
+      ay= 0;
+   }
 }
 
 function botaoPressionado(evento){
@@ -117,4 +110,28 @@ function botaoSolto(evento){
       console.log(evento.keyCode);
       acelerando=false;     
    }
+}
+
+function astronauta(x, y, a){
+   ctx.save();
+   ctx.translate(x, y);
+   ctx.rotate(a*2*Math.PI/360);
+   ctx.beginPath();
+   ctx.arc(0, -10, 10, 0, 2*Math.PI, false);
+   ctx.closePath();
+   ctx.fillStyle = "yellow";
+   ctx.fill();
+   ctx.stroke();
+
+   ctx.moveTo(-20,0);
+   ctx.lineTo(20,0);
+   ctx.stroke();
+   ctx.moveTo(0,0);
+   ctx.lineTo(20,20);
+   ctx.stroke();
+   ctx.moveTo(0,0);
+   ctx.lineTo(-20,20);
+   ctx.stroke();
+   
+   ctx.restore();
 }
