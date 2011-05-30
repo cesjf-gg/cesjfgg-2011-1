@@ -34,6 +34,16 @@ var vy = 0 ;
 var ay = 30;
 setInterval(passo,intervalo);
 
+var astro1 = new Sprite(250,50,40,40);
+var astro2 = new Sprite(250,150,40,40);
+
+function Sprite(x,y,h,w){
+   this.x = x;
+   this.y = y;
+   this.h = h;
+   this.w = w;
+}
+
 function foguete(){
 
    //Casco
@@ -113,6 +123,14 @@ function passo(){
       ax= -40;
       ay= 0;
    }
+
+   astronauta(astro1.x, astro1.y, 0);
+   astronauta(astro2.x, astro2.y, 0);
+   astro1.y++;
+   console.log(colisao(astro1,astro2));
+   if(colisao(astro1,astro2)){
+      astro1.y =-10;
+   }
 }
 
 function botaoPressionado(evento){
@@ -151,4 +169,22 @@ function astronauta(x, y, a){
    ctx.stroke();
    
    ctx.restore();
+}
+
+function colisao(o1, o2){
+   if((o1.y-o1.h/2)>(o2.y+o2.h/2)){
+      return false;
+   }
+   if((o1.y+o1.h/2)<(o2.y-o2.h/2)){
+      return false;
+   }
+
+   if((o1.x+o1.w/2)<(o2.x-o2.w/2)){
+      return false;
+   }
+   if((o1.x-o1.w/2)>(o2.x+o2.w/2)){
+      return false;
+   }
+
+   return true;
 }
