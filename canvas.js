@@ -20,8 +20,7 @@ var ctx = tela.getContext("2d");
 
 var x = 0;
 var y = 0;
-var ax = 0;
-var ay = 0;
+var gravidadeY = 30;
 var acelerando=false;
 document.addEventListener("keydown",botaoPressionado,false);
 document.addEventListener("keyup",botaoSolto,false);
@@ -31,11 +30,12 @@ const fps = 30;
 const segundo = 1000;
 var intervalo = segundo/fps;
 var vy = 0 ;
-var ay = 30;
 setInterval(passo,intervalo);
 
-var astro1 = new Sprite(250,50,40,40);
-var astro2 = new Sprite(250,150,40,40);
+var pcfoguete = new Sprite(150, 80, 70, 50);
+var astro0 = new Sprite(-40,120,40,40);
+var astro1 = new Sprite(340,50,40,40);
+var astro2 = new Sprite(-100,220,40,40);
 
 function Sprite(x,y,h,w){
    this.x = x;
@@ -44,8 +44,9 @@ function Sprite(x,y,h,w){
    this.w = w;
 }
 
-function foguete(){
+function desenhaFoguete(){
 
+   ctx.strokeStyle = "rgb(0, 0, 0)";
    //Casco
    ctx.beginPath();
    ctx.rect(110+x,200+y, 40, 50);
@@ -104,8 +105,12 @@ function passo(){
    if(acelerando){
     vy-=100*(intervalo/1000);  
    }
-   vy+=ay*(intervalo/1000);
-   y+=vy*(intervalo/1000); 
+   vy+=gravidadeY*(intervalo/1000);
+   //y+=vy*(intervalo/1000); 
+   pcfoguete.y+=vy*(intervalo/1000);
+   y = pcfoguete.y-200-50/2;
+   x = pcfoguete.x-110-40/2;
+/*
    if(y>150){
       y=150;
       vy=0;   
@@ -114,23 +119,35 @@ function passo(){
    y=-180;
    vy=0;
    }
-   foguete();
-   astronauta(10, 20, 0);  
-   astronauta(50, 120, 45);  
+*/
+   if(pcfoguete.y>(400-pcfoguete.h/2)){
+      pcfoguete.y=(400-pcfoguete.h/2);
+      vy=0;   
+   }
+   if (pcfoguete.y<(0)){
+   pcfoguete.y=0;
+   vy=0;
+   }
+   desenhaFoguete();
+   desenhaLimiteSprites(pcfoguete);
    
-   astronauta(ax++, 120, r++);  
-   if(ax>340){
-      ax= -40;
-      ay= 0;
+
+   desenhaAstronauta(astro0.x++, astro0.y, 45+r++);  
+   desenhaLimiteSprites(astro0);
+   desenhaAstronauta(astro1.x--, astro1.y, r++);  
+   desenhaLimiteSprites(astro1);
+   desenhaAstronauta(astro2.x++, astro2.y, 120+r++);  
+   desenhaLimiteSprites(astro2);
+   if(astro0.x>340){
+      astro0.x= -40;
+   }
+   if(astro1.x<-40){
+      astro1.x= 340;
+   }
+   if(astro2.x>340){
+      astro2.x= -40;
    }
 
-   astronauta(astro1.x, astro1.y, 0);
-   astronauta(astro2.x, astro2.y, 0);
-   astro1.y++;
-   console.log(colisao(astro1,astro2));
-   if(colisao(astro1,astro2)){
-      astro1.y =-10;
-   }
 }
 
 function botaoPressionado(evento){
@@ -147,7 +164,8 @@ function botaoSolto(evento){
    }
 }
 
-function astronauta(x, y, a){
+function desenhaAstronauta(x, y, a){
+   ctx.strokeStyle = "rgb(0, 0, 0)";
    ctx.save();
    ctx.translate(x, y);
    ctx.rotate(a*2*Math.PI/360);
@@ -187,4 +205,15 @@ function colisao(o1, o2){
    }
 
    return true;
+}
+
+
+function desenhaLimiteSprites(sprite){
+   ctx.beginPath();
+   ctx.rect(sprite.x-sprite.w/2,sprite.y-sprite.h/2, sprite.w, sprite.h);
+   ctx.closePath();   
+   ctx.strokeStyle = "rgb(255, 0, 0)";
+   ctx.lineWidth = 2;
+   ctx.stroke();
+
 }
