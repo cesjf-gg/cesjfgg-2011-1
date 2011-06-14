@@ -18,6 +18,8 @@ along with CESJFGG-2011-1.  If not, see <http://www.gnu.org/licenses/>.
 var tela = document.getElementById("tela");
 var ctx = tela.getContext("2d");
 
+var pontos = 0;
+var vidas = 5;
 var x = 0;
 var y = 0;
 var gravidadeY = 30;
@@ -138,6 +140,19 @@ function passo(){
    desenhaLimiteSprites(astro1);
    desenhaAstronauta(astro2.x++, astro2.y, 120+r++);  
    desenhaLimiteSprites(astro2);
+   if(colisao(astro0, pcfoguete)){
+      astro0.x=1000;
+      pontos++;
+   }
+   if(colisao(astro1, pcfoguete)){
+      astro1.x=-1000;
+      pontos++;
+   }
+   if(colisao(astro2, pcfoguete)){
+      astro2.x=1000;
+      pontos++;
+   }
+
    if(astro0.x>340){
       astro0.x= -40;
    }
@@ -147,7 +162,7 @@ function passo(){
    if(astro2.x>340){
       astro2.x= -40;
    }
-
+   desenhaPlacar();
 }
 
 function botaoPressionado(evento){
@@ -217,3 +232,17 @@ function desenhaLimiteSprites(sprite){
    ctx.stroke();
 
 }
+
+function desenhaPlacar(){
+   ctx.strokeStyle = "rgb(0, 0, 0)";
+   ctx.fillStyle = "rgb(0, 255, 0)";
+   ctx.lineWidth = 1;
+   ctx.font = '25px bold "Arial Black", sans-serif';
+
+   ctx.fillText("Escore: "+pontos, 10, 25);
+   ctx.strokeText("Escore: "+pontos, 10, 25);
+
+   ctx.fillText("Vidas: "+vidas, 170, 25);
+   ctx.strokeText("Vidas: "+vidas, 170, 25);
+}
+
