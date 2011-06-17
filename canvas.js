@@ -27,6 +27,8 @@ var acelerando=false;
 document.addEventListener("keydown",botaoPressionado,false);
 document.addEventListener("keyup",botaoSolto,false);
 var r = 0;
+var frame=0;
+var framel=0;
 
 const fps = 30;
 const segundo = 1000;
@@ -34,10 +36,17 @@ var intervalo = segundo/fps;
 var vy = 0 ;
 setInterval(passo,intervalo);
 
-var pcfoguete = new Sprite(150, 80, 70, 50);
+var imagemInimigo = new Image();
+imagemInimigo.src = "enemy_4.png";
+var imagemBoom = new Image();
+imagemBoom.src = "exp2_0.png";
+
+var pcfoguete = new Sprite(150, 375, 70, 50);
 var astro0 = new Sprite(-40,120,40,40);
 var astro1 = new Sprite(340,50,40,40);
 var astro2 = new Sprite(-100,220,40,40);
+var inimigo1 = new Sprite(-100,280,32,32);
+var boom = new Sprite(50,50,64,64);
 
 function Sprite(x,y,h,w){
    this.x = x;
@@ -140,6 +149,18 @@ function passo(){
    desenhaLimiteSprites(astro1);
    desenhaAstronauta(astro2.x++, astro2.y, 120+r++);  
    desenhaLimiteSprites(astro2);
+   desenhaInimigo(inimigo1.x++, inimigo1.y, 50+r++);  
+   desenhaLimiteSprites(inimigo1);
+   desenhaBoom(boom.x, boom.y, 0);  
+   if(++frame>3) {
+      frame = 0;
+      framel++;
+   }
+   if(framel>3) {
+      framel = 0;
+      boom.x = -1000;
+      boom.y = -1000;
+   }
    if(colisao(astro0, pcfoguete)){
       astro0.x=1000;
       pontos++;
@@ -152,6 +173,14 @@ function passo(){
       astro2.x=1000;
       pontos++;
    }
+   if(colisao(inimigo1, pcfoguete)){
+      boom.x = pcfoguete.x;
+      boom.y = pcfoguete.y;
+      frame = 0;
+      framel = 0;
+      pcfoguete.y=(400-pcfoguete.h/2);
+      vidas--;
+   }
 
    if(astro0.x>340){
       astro0.x= -40;
@@ -161,6 +190,9 @@ function passo(){
    }
    if(astro2.x>340){
       astro2.x= -40;
+   }
+   if(inimigo1.x>340){
+      inimigo1.x= -40;
    }
    desenhaPlacar();
 }
@@ -179,6 +211,21 @@ function botaoSolto(evento){
    }
 }
 
+function desenhaBoom(x, y, a){
+   ctx.save();
+   ctx.translate(x, y);
+   //ctx.rotate(a*2*Math.PI/360);
+   ctx.drawImage(imagemBoom,frame*64,framel*64,64, 64,-32,-32, 64, 64);
+   ctx.restore();
+}
+
+function desenhaInimigo(x, y, a){
+   ctx.save();
+   ctx.translate(x, y);
+   ctx.rotate(a*2*Math.PI/360);
+   ctx.drawImage(imagemInimigo,-16,-16);
+   ctx.restore();
+}
 function desenhaAstronauta(x, y, a){
    ctx.strokeStyle = "rgb(0, 0, 0)";
    ctx.save();
@@ -245,4 +292,3 @@ function desenhaPlacar(){
    ctx.fillText("Vidas: "+vidas, 170, 25);
    ctx.strokeText("Vidas: "+vidas, 170, 25);
 }
-
