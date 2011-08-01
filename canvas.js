@@ -46,7 +46,9 @@ var astro0 = new Sprite(-40,120,40,40);
 var astro1 = new Sprite(340,50,40,40);
 var astro2 = new Sprite(-100,220,40,40);
 var inimigo1 = new Sprite(-100,280,32,32);
-var boom = new Sprite(50,50,64,64);
+var inimigo2 = new Sprite(180,85,32,32);
+var inimigo3 = new Sprite(180,165,32,32);
+var boom = new Sprite(-150,-150,64,64);
 
 function Sprite(x,y,h,w){
    this.x = x;
@@ -140,17 +142,20 @@ function passo(){
    vy=0;
    }
    desenhaFoguete();
-   desenhaLimiteSprites(pcfoguete);
+   //desenhaLimiteSprites(pcfoguete);
    
 
    desenhaAstronauta(astro0.x++, astro0.y, 45+r++);  
-   desenhaLimiteSprites(astro0);
+   //desenhaLimiteSprites(astro0);
    desenhaAstronauta(astro1.x--, astro1.y, r++);  
-   desenhaLimiteSprites(astro1);
+   //desenhaLimiteSprites(astro1);
    desenhaAstronauta(astro2.x++, astro2.y, 120+r++);  
-   desenhaLimiteSprites(astro2);
-   desenhaInimigo(inimigo1.x++, inimigo1.y, 50+r++);  
-   desenhaLimiteSprites(inimigo1);
+   //desenhaLimiteSprites(astro2);
+   desenhaInimigo((inimigo1.x+=2), inimigo1.y, 50+r++);  
+   desenhaInimigo(inimigo3.x++, inimigo3.y, r--);  
+   //desenhaLimiteSprites(inimigo1);
+   desenhaInimigo(inimigo2.x--, inimigo2.y, r++);  
+   //desenhaLimiteSprites(inimigo2);
    desenhaBoom(boom.x, boom.y, 0);  
    if(++frame>3) {
       frame = 0;
@@ -173,7 +178,11 @@ function passo(){
       astro2.x=1000;
       pontos++;
    }
-   if(colisao(inimigo1, pcfoguete)){
+   if(
+      colisao(inimigo1, pcfoguete) ||
+      colisao(inimigo2, pcfoguete) ||
+      colisao(inimigo3, pcfoguete)
+   ){
       boom.x = pcfoguete.x;
       boom.y = pcfoguete.y;
       frame = 0;
@@ -194,8 +203,15 @@ function passo(){
    if(inimigo1.x>340){
       inimigo1.x= -40;
    }
+   if(inimigo2.x<-40){
+      inimigo2.x= 340;
+   }
+   if(inimigo3.x>340){
+      inimigo3.x= -60;
+   }
    desenhaPlacar();
 }
+
 
 function botaoPressionado(evento){
    if(evento.keyCode==38){
@@ -291,4 +307,33 @@ function desenhaPlacar(){
 
    ctx.fillText("Vidas: "+vidas, 170, 25);
    ctx.strokeText("Vidas: "+vidas, 170, 25);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+tela.addEventListener("touchstart",toquePressionado,false);
+tela.addEventListener("touchend",toqueSolto,false);
+tela.addEventListener("mousedown",toquePressionado,false);
+tela.addEventListener("mouseup",toqueSolto,false);
+
+function toquePressionado(evento){
+      evento.preventDefault();
+      console.dir(evento);
+      acelerando=true;     
+}
+
+function toqueSolto(evento){
+      evento.preventDefault();
+      console.dir(evento);
+      acelerando=false;     
 }
