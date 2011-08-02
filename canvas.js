@@ -20,6 +20,8 @@ var ctx = tela.getContext("2d");
 
 var pontos = 0;
 var vidas = 5;
+var combustivel = 100;
+
 var x = 0;
 var y = 0;
 var gravidadeY = 30;
@@ -115,31 +117,23 @@ function limpar(){
 
 function passo(){
    limpar();
-   if(acelerando){
-    vy-=100*(intervalo/1000);  
+   if(acelerando && combustivel > 0){
+      vy-=100*(intervalo/1000);
+      combustivel -= 10*(intervalo/1000);
    }
    vy+=gravidadeY*(intervalo/1000);
    //y+=vy*(intervalo/1000); 
    pcfoguete.y+=vy*(intervalo/1000);
    y = pcfoguete.y-200-50/2;
    x = pcfoguete.x-110-40/2;
-/*
-   if(y>150){
-      y=150;
-      vy=0;   
-   }
-   if (y<(0-180)){
-   y=-180;
-   vy=0;
-   }
-*/
-   if(pcfoguete.y>(400-pcfoguete.h/2)){
-      pcfoguete.y=(400-pcfoguete.h/2);
+
+   if(pcfoguete.y>(380-pcfoguete.h/2)){
+      pcfoguete.y=(380-pcfoguete.h/2);
       vy=0;   
    }
    if (pcfoguete.y<(0)){
-   pcfoguete.y=0;
-   vy=0;
+      pcfoguete.y=0;
+      vy=0;
    }
    desenhaFoguete();
    //desenhaLimiteSprites(pcfoguete);
@@ -156,7 +150,8 @@ function passo(){
    //desenhaLimiteSprites(inimigo1);
    desenhaInimigo(inimigo2.x--, inimigo2.y, r++);  
    //desenhaLimiteSprites(inimigo2);
-   desenhaBoom(boom.x, boom.y, 0);  
+   desenhaBoom(boom.x, boom.y, 0);
+   desenhaCombustivel();  
    if(++frame>3) {
       frame = 0;
       framel++;
@@ -169,26 +164,33 @@ function passo(){
    if(colisao(astro0, pcfoguete)){
       astro0.x=1000;
       pontos++;
+      combustivel = (combustivel+5>100)?100:combustivel+5;
    }
    if(colisao(astro1, pcfoguete)){
       astro1.x=-1000;
       pontos++;
+      combustivel = (combustivel+5>100)?100:combustivel+5;
    }
    if(colisao(astro2, pcfoguete)){
       astro2.x=1000;
       pontos++;
+      combustivel = (combustivel+5>100)?100:combustivel+5;
    }
    if(
       colisao(inimigo1, pcfoguete) ||
       colisao(inimigo2, pcfoguete) ||
-      colisao(inimigo3, pcfoguete)
+      colisao(inimigo3, pcfoguete) ||
+      combustivel <= 0
    ){
       boom.x = pcfoguete.x;
       boom.y = pcfoguete.y;
       frame = 0;
       framel = 0;
-      pcfoguete.y=(400-pcfoguete.h/2);
+      pcfoguete.y=(380-pcfoguete.h/2);
+      acelerando = false;
+      vy = 0;
       vidas--;
+      combustivel = 100;
    }
 
    if(astro0.x>340){
@@ -225,6 +227,18 @@ function botaoSolto(evento){
       console.log(evento.keyCode);
       acelerando=false;     
    }
+}
+
+function desenhaCombustivel(){
+   ctx.strokeStyle = "rgb(0, 0, 0)";
+   ctx.beginPath();
+   ctx.rect(10, 380, 280*(combustivel/100), 10);
+   ctx.closePath();   
+   ctx.fillStyle = "hsl("+80*(combustivel/100)+",100%, 50%)";
+   ctx.fill();
+   ctx.lineWidth = 2;
+   ctx.stroke();   
+
 }
 
 function desenhaBoom(x, y, a){
