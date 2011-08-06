@@ -1,10 +1,10 @@
 body {
-   background-color: gray;
+   background-color: black;
    margin: 0 auto;
    width: 400px;
 }
 
 canvas {
-   background-color: white;
+   background: white;
    border: 1px solid black;
 }
