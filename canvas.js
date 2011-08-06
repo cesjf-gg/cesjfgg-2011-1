@@ -1,4 +1,4 @@
-/*
+/*-
 This file are part of CESJFGG-2011-1.
 
 CESJFGG-2011-1 is free software: you can redistribute it and/or modify
@@ -32,24 +32,36 @@ var r = 0;
 var frame=0;
 var framel=0;
 
-const fps = 30;
+const fps = 42;
 const segundo = 1000;
 var intervalo = segundo/fps;
 var vy = 0 ;
 setInterval(passo,intervalo);
 
+var imagemNave = new Image();
+imagemNave.src = "player_ship.png";
 var imagemInimigo = new Image();
 imagemInimigo.src = "enemy_4.png";
+var imagemAstro = new Image();
+imagemAstro.src = "astro.png";
+var gameOver = new Image();
+gameOver.src = "gameover.png";
 var imagemBoom = new Image();
 imagemBoom.src = "exp2_0.png";
+var imagemVidas = new Image();
+imagemVidas.src = "vidas.png";
+var imagemPontos = new Image();
+imagemPontos.src = "pontos.png";
+var imagemFundo = new Image();
+imagemFundo.src = "fundo.jpg";
 
-var pcfoguete = new Sprite(150, 375, 70, 50);
-var astro0 = new Sprite(-40,120,40,40);
-var astro1 = new Sprite(340,50,40,40);
-var astro2 = new Sprite(-100,220,40,40);
-var inimigo1 = new Sprite(-100,280,32,32);
-var inimigo2 = new Sprite(180,85,32,32);
-var inimigo3 = new Sprite(180,165,32,32);
+var pcfoguete = new Sprite(150, 375, 55, 55);
+var astro0 = new Sprite(-40,120,55,55);
+var astro1 = new Sprite(340,50,55,55);
+var astro2 = new Sprite(-100,220,55,55);
+var inimigo1 = new Sprite(-100,280,55,50);
+var inimigo2 = new Sprite(180,85,55,50);
+var inimigo3 = new Sprite(180,245,55,50);
 var boom = new Sprite(-150,-150,64,64);
 
 function Sprite(x,y,h,w){
@@ -61,52 +73,9 @@ function Sprite(x,y,h,w){
 
 function desenhaFoguete(){
 
-   ctx.strokeStyle = "rgb(0, 0, 0)";
-   //Casco
-   ctx.beginPath();
-   ctx.rect(110+x,200+y, 40, 50);
-   ctx.closePath();   
-   ctx.fillStyle = "rgb(150, 150, 250)";
-   ctx.fill();
-   ctx.lineWidth = 2;
-   ctx.stroke();
-
-
-   ctx.beginPath();
-   ctx.moveTo(110+x,250+y);
-   ctx.lineTo(90+x,250+y);
-   ctx.lineTo(110+x,235+y);
-   ctx.closePath();
-   ctx.fillStyle = "rgb(250, 150, 150)";
-   ctx.fill();
-   ctx.stroke();
-
-
-   ctx.beginPath();
-   ctx.moveTo(150+x,250+y);
-   ctx.lineTo(170+x,250+y);
-   ctx.lineTo(150+x,235+y);
-   ctx.closePath();
-   ctx.fill();
-   ctx.stroke();
-
-
-   ctx.beginPath();
-   ctx.moveTo(110+x,200+y);
-   ctx.lineTo(130+x,180+y);
-   ctx.lineTo(150+x,200+y);
-   ctx.closePath();
-   ctx.fillStyle = "rgb(150, 250, 150)";
-   ctx.fill();
-   ctx.stroke();
-
-
-   ctx.beginPath();
-   ctx.arc(130+x,225+y, 10, 0, 2*Math.PI, false);
-   ctx.closePath();
-   ctx.fillStyle = "rgb(100, 100, 150)";
-   ctx.fill();
-   ctx.stroke();
+   ctx.save();
+   ctx.drawImage(imagemNave,x+90,y+190);
+   ctx.restore();
 }
 
 //lipar a tela
@@ -115,8 +84,10 @@ function limpar(){
    ctx.fillRect(0,0, 300, 400);
 }
 
+
 function passo(){
    limpar();
+   ctx.drawImage(imagemFundo,0,0);
    if(acelerando && combustivel > 0){
       vy-=100*(intervalo/1000);
       combustivel -= 10*(intervalo/1000);
@@ -137,15 +108,13 @@ function passo(){
    }
    desenhaFoguete();
    //desenhaLimiteSprites(pcfoguete);
-   
-
-   desenhaAstronauta(astro0.x++, astro0.y, 45+r++);  
+   desenhaAstronauta(astro0.x++, astro0.y++, 45+r++);  
    //desenhaLimiteSprites(astro0);
-   desenhaAstronauta(astro1.x--, astro1.y, r++);  
+   desenhaAstronauta(astro1.x--, astro1.y++, r++);  
    //desenhaLimiteSprites(astro1);
-   desenhaAstronauta(astro2.x++, astro2.y, 120+r++);  
+   desenhaAstronauta(astro2.x++, astro2.y--, 120+r++);  
    //desenhaLimiteSprites(astro2);
-   desenhaInimigo((inimigo1.x+=2), inimigo1.y, 50+r++);  
+   desenhaInimigo((inimigo1.x+=2), inimigo1.y--, 50+r++);  
    desenhaInimigo(inimigo3.x++, inimigo3.y, r--);  
    //desenhaLimiteSprites(inimigo1);
    desenhaInimigo(inimigo2.x--, inimigo2.y, r++);  
@@ -163,21 +132,23 @@ function passo(){
    }
    if(colisao(astro0, pcfoguete)){
       astro0.x=1000;
+      console.log("Astro0");
       pontos++;
-      combustivel = (combustivel+5>100)?100:combustivel+5;
+      combustivel = (combustivel+10>100)?100:combustivel+10;
    }
    if(colisao(astro1, pcfoguete)){
       astro1.x=-1000;
+      console.log("Astro1");
       pontos++;
-      combustivel = (combustivel+5>100)?100:combustivel+5;
+      combustivel = (combustivel+10>100)?100:combustivel+10;
    }
    if(colisao(astro2, pcfoguete)){
       astro2.x=1000;
+      console.log("Astro2");
       pontos++;
-      combustivel = (combustivel+5>100)?100:combustivel+5;
+      combustivel = (combustivel+10>100)?100:combustivel+10;
    }
    if(
-      colisao(inimigo1, pcfoguete) ||
       colisao(inimigo2, pcfoguete) ||
       colisao(inimigo3, pcfoguete) ||
       combustivel <= 0
@@ -192,7 +163,21 @@ function passo(){
       vidas--;
       combustivel = 100;
    }
-
+   if(
+      colisao(inimigo1, pcfoguete)
+   ){
+      boom.x = pcfoguete.x;
+      boom.y = pcfoguete.y;
+      frame = 0;
+      framel = 0;
+      inimigo1.y=(150-inimigo1.h/2);
+      inimigo1.x=0;
+      pcfoguete.y=(380-pcfoguete.h/2);
+      acelerando = false;
+      vy = 0;
+      vidas--;
+      combustivel = 100;
+   }
    if(astro0.x>340){
       astro0.x= -40;
    }
@@ -211,9 +196,35 @@ function passo(){
    if(inimigo3.x>340){
       inimigo3.x= -60;
    }
-   desenhaPlacar();
-}
+   if(astro0.y>400){
+		astro0.y-=400;
+   }
+   if(astro1.y>400){
+		astro1.y-=400;
+    }
+    if(astro2.y<50){
+		astro2.y+=600;
+    }
+    if(inimigo1.y<50){
+		inimigo1.y+=600;
+     }
 
+   desenhaPlacar();
+   if(vidas<=0){
+	   limpar();
+	   astro0.x=0;
+	   astro0.y=0;
+	   astro1.x=0;
+	   astro1.y=0;
+	   astro2.x=0;
+	   astro2.y=0;
+	   ctx.drawImage(imagemFundo,0,0);
+	   ctx.drawImage(gameOver,25,100);
+	   ctx.fillText("Pontuação: "+pontos, 70, 200);
+	   ctx.strokeText("Pontuação: "+pontos, 70, 200);
+	}
+
+}
 
 function botaoPressionado(evento){
    if(evento.keyCode==38){
@@ -252,32 +263,15 @@ function desenhaBoom(x, y, a){
 function desenhaInimigo(x, y, a){
    ctx.save();
    ctx.translate(x, y);
-   ctx.rotate(a*2*Math.PI/360);
-   ctx.drawImage(imagemInimigo,-16,-16);
+   ctx.rotate(a*Math.PI/360);
+   ctx.drawImage(imagemInimigo,-29,-26);
    ctx.restore();
 }
 function desenhaAstronauta(x, y, a){
-   ctx.strokeStyle = "rgb(0, 0, 0)";
    ctx.save();
    ctx.translate(x, y);
-   ctx.rotate(a*2*Math.PI/360);
-   ctx.beginPath();
-   ctx.arc(0, -10, 10, 0, 2*Math.PI, false);
-   ctx.closePath();
-   ctx.fillStyle = "yellow";
-   ctx.fill();
-   ctx.stroke();
-
-   ctx.moveTo(-20,0);
-   ctx.lineTo(20,0);
-   ctx.stroke();
-   ctx.moveTo(0,0);
-   ctx.lineTo(20,20);
-   ctx.stroke();
-   ctx.moveTo(0,0);
-   ctx.lineTo(-20,20);
-   ctx.stroke();
-   
+   ctx.rotate(a*Math.PI/360);
+   ctx.drawImage(imagemAstro,-30,-30);
    ctx.restore();
 }
 
@@ -311,29 +305,17 @@ function desenhaLimiteSprites(sprite){
 }
 
 function desenhaPlacar(){
-   ctx.strokeStyle = "rgb(0, 0, 0)";
-   ctx.fillStyle = "rgb(0, 255, 0)";
-   ctx.lineWidth = 1;
+   ctx.strokeStyle = "rgb(255, 255, 255)";
+   ctx.fillStyle = "rgb(255, 255, 255)";
+   ctx.lineWidth = 3;
    ctx.font = '25px bold "Arial Black", sans-serif';
-
-   ctx.fillText("Escore: "+pontos, 10, 25);
-   ctx.strokeText("Escore: "+pontos, 10, 25);
-
-   ctx.fillText("Vidas: "+vidas, 170, 25);
-   ctx.strokeText("Vidas: "+vidas, 170, 25);
+   ctx.drawImage(imagemPontos,0,0);
+   ctx.fillText(pontos, 130, 37);
+   ctx.strokeText(pontos, 130, 37);
+   ctx.drawImage(imagemVidas,160,0);
+   ctx.fillText(vidas, 270, 37);
+   ctx.strokeText(vidas, 270, 37);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 tela.addEventListener("touchstart",toquePressionado,false);
 tela.addEventListener("touchend",toqueSolto,false);
