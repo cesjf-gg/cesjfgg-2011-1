@@ -78,7 +78,7 @@ function desenhaFoguete(){
    ctx.restore();
 }
 
-//lipar a tela
+//limpar a tela
 function limpar(){
    ctx.fillStyle = "rgb(255, 255, 255)";
    ctx.fillRect(0,0, 300, 400);
@@ -132,19 +132,16 @@ function passo(){
    }
    if(colisao(astro0, pcfoguete)){
       astro0.x=1000;
-      console.log("Astro0");
       pontos++;
       combustivel = (combustivel+10>100)?100:combustivel+10;
    }
    if(colisao(astro1, pcfoguete)){
       astro1.x=-1000;
-      console.log("Astro1");
       pontos++;
       combustivel = (combustivel+10>100)?100:combustivel+10;
    }
    if(colisao(astro2, pcfoguete)){
       astro2.x=1000;
-      console.log("Astro2");
       pontos++;
       combustivel = (combustivel+10>100)?100:combustivel+10;
    }
