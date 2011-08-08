@@ -59,9 +59,9 @@ var pcfoguete = new Sprite(150, 375, 55, 55);
 var astro0 = new Sprite(-40,120,55,55);
 var astro1 = new Sprite(340,50,55,55);
 var astro2 = new Sprite(-100,220,55,55);
-var inimigo1 = new Sprite(-100,280,55,50);
-var inimigo2 = new Sprite(180,85,55,50);
-var inimigo3 = new Sprite(180,245,55,50);
+var inimigo1 = new Sprite(-100,280,50,50);
+var inimigo2 = new Sprite(180,85,50,50);
+var inimigo3 = new Sprite(180,245,50,50);
 var boom = new Sprite(-150,-150,64,64);
 
 function Sprite(x,y,h,w){
@@ -113,7 +113,7 @@ function passo(){
    desenhaAstronauta(astro1.x--, astro1.y++, r++);  
    //desenhaLimiteSprites(astro1);
    desenhaAstronauta(astro2.x++, astro2.y--, 120+r++);  
-   //desenhaLimiteSprites(astro2);
+  //desenhaLimiteSprites(astro2);
    desenhaInimigo((inimigo1.x+=2), inimigo1.y--, 50+r++);  
    desenhaInimigo(inimigo3.x++, inimigo3.y, r--);  
    //desenhaLimiteSprites(inimigo1);
@@ -264,7 +264,7 @@ function desenhaInimigo(x, y, a){
    ctx.save();
    ctx.translate(x, y);
    ctx.rotate(a*Math.PI/360);
-   ctx.drawImage(imagemInimigo,-29,-26);
+   ctx.drawImage(imagemInimigo,-27,-26);
    ctx.restore();
 }
 function desenhaAstronauta(x, y, a){
